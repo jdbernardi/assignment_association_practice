@@ -11,6 +11,8 @@ Post.destroy_all
 Tag.destroy_all
 Comment.destroy_all
 Category.destroy_all
+UserPost.destroy_all
+PostTag.destroy_all
 
 puts "Old records destroyed"
 
@@ -33,18 +35,6 @@ def generate_user
 
 end
 
-
-def generate_posts
-
-	p = Post.new
-
-	p[ :title ] = Faker::Lorem.sentence
-	p[ :body ] = Faker::Lorem.paragraphs
-	p[ :category_id ] = Category.pluck( :id ).sample
-	p.save!
-
-end
-
 def generate_tags
 
 	t = Tag.new
@@ -53,12 +43,46 @@ def generate_tags
 
 end
 
+def generate_posts
+
+	p = Post.new
+
+	p[ :title ] = Faker::Lorem.sentence
+	p[ :body ] = Faker::Lorem.paragraphs
+	p[ :category_id ] = Category.pluck( :id ).sample
+
+	p.save!
+
+	user = User.all.sample
+
+	user_post = UserPost.new
+
+	user_post[ :post_id ] = p.id
+	user_post[ :user_id ] = user.id
+
+	user_post.save!
+
+	tag = Tag.all.sample
+
+	pt = PostTag.new
+
+	pt[ :post_id ] = p.id
+	pt[ :tag_id ] = tag.id
+
+	pt.save!
+
+end
+
+
 def generate_comments
+
+	user = User.all.sample
+	post = Post.all.sample
 
 	c = Comment.new
 	c[ :body ] = Faker::Lorem.paragraphs
-	c[ :post_id ] = Post.pluck( :id ).sample
-	c[ :user_id ] = Post.pluck( :id ).sample
+	c[ :post_id ] = post.id
+	c[ :user_id ] = user.id
 
 	c.save!
 
@@ -73,18 +97,20 @@ puts "Created categories"
 (MULTIPLIER * 10).times { generate_user }
 puts "Created users"
 
-
+puts "Create tags"
+(MULTIPLIER * 10).times { generate_tags }
+puts "Created tags"
 puts "Create posts"
 (MULTIPLIER * 10).times { generate_posts }
 puts "Created posts"
 
-puts "Create tags"
-(MULTIPLIER * 10).times { generate_tags }
-puts "Created tags"
-
 puts "Create comments"
 (MULTIPLIER * 10).times { generate_comments }
 puts "Created comments"
+
+
+
+
 
 
 

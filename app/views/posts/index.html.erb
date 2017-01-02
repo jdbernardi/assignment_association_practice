@@ -1,0 +1,9 @@
+INDEX
+
+<%= form_for @post do | post_fields | %>
+	<%= post_fields.label :title %>
+	<%= post_fields.text_field :title %>
+
+	<%= post_fields.submit %>
+
+<% end %>
