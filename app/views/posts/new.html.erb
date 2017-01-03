@@ -11,7 +11,7 @@ INDEX
 		<%= post_fields.fields_for :comments do |comment_fields| %>
 
 		<%= comment_fields.label :body %>
-		<%= comment_fields.text_field :body %>
+		<%= comment_fields.text_area :body, class: "text-area" %>
 
 		<% end %>
 
